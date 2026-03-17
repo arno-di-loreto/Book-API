@@ -1,0 +1,54 @@
+$kind: http-request
+name: Get Book
+method: GET
+url: '{{baseUrl}}/api/v1/books/{{createdBookId}}'
+order: 2000
+examples: './.resources/Get Book.resources/examples'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Response time is acceptable", function () {
+          pm.expect(pm.response.responseTime).to.be.below(2000);
+      });
+
+      pm.test("Content-Type is application/json", function () {
+          pm.expect(pm.response.headers.get("Content-Type")).to.include("application/json");
+      });
+
+      pm.test("Response has book object", function () {
+          const json = pm.response.json();
+          pm.expect(json).to.have.property("book");
+          pm.expect(json.book).to.be.an("object");
+      });
+
+      pm.test("Book has required fields", function () {
+          const json = pm.response.json();
+          pm.expect(json.book).to.have.property("id");
+          pm.expect(json.book).to.have.property("title");
+          pm.expect(json.book).to.have.property("author");
+          pm.expect(json.book.title).to.be.a("string").and.not.empty;
+          pm.expect(json.book.author).to.be.a("string").and.not.empty;
+      });
+
+      pm.test("Book id matches requested id", function () {
+          const json = pm.response.json();
+          const createdId = pm.collectionVariables.get("createdBookId");
+          pm.expect(String(json.book.id)).to.eql(String(createdId));
+      });
+
+      pm.test("Optional book fields have correct types when present", function () {
+          const json = pm.response.json();
+          if (json.book.year !== null && json.book.year !== undefined) {
+              pm.expect(json.book.year).to.be.a("number");
+          }
+          if (json.book.publisher !== null && json.book.publisher !== undefined) {
+              pm.expect(json.book.publisher).to.be.a("string");
+          }
+      });
+
+      pm.execution.setNextRequest("Update Book");
