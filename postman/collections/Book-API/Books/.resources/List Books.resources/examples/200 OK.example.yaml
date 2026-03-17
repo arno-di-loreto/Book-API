@@ -1,0 +1,39 @@
+$kind: http-example
+name: 200 OK
+request:
+  method: GET
+  url: '{{baseUrl}}/api/v1/books'
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "books": [
+          {
+            "id": "1",
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "year": 1925,
+            "publisher": "Scribner"
+          },
+          {
+            "id": "2",
+            "title": "1984",
+            "author": "George Orwell",
+            "year": 1949,
+            "publisher": "Secker & Warburg"
+          },
+          {
+            "id": "35af89a6",
+            "title": "The Hitchhiker's Guide to the Galaxy",
+            "author": "Douglas Adams",
+            "year": 1979,
+            "publisher": "Pan Books"
+          }
+        ]
+      }

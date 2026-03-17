@@ -1,0 +1,35 @@
+$kind: http-example
+name: 200 OK
+request:
+  method: PUT
+  url: '{{baseUrl}}/api/v1/books/1'
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "year": 1925,
+        "publisher": "Scribner"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "book": {
+          "id": "1",
+          "title": "The Great Gatsby",
+          "author": "F. Scott Fitzgerald",
+          "year": 1925,
+          "publisher": "Scribner"
+        }
+      }

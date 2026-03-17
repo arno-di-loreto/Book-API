@@ -1,9 +1,13 @@
 $kind: http-request
-method: DELETE
-url: '{{baseUrl}}/api/v1/books/{{createdBookId}}'
-order: 5000
-examples: './.resources/Delete Book.resources/examples'
+method: GET
+url: '{{baseUrl}}/'
+order: 1000
+examples: './.resources/API Root.resources/examples'
 scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      pm.collectionVariables.unset("createdBookId");
   - type: afterResponse
     language: text/javascript
     code: |-
@@ -25,19 +29,10 @@ scripts:
           pm.expect(json.message).to.be.a("string").and.not.empty;
       });
 
-      pm.test("Response has id field", function () {
+      pm.test("Response has docs field", function () {
           const json = pm.response.json();
-          pm.expect(json).to.have.property("id");
-          pm.expect(json.id).to.not.be.null;
-          pm.expect(json.id).to.not.be.undefined;
+          pm.expect(json).to.have.property("docs");
+          pm.expect(json.docs).to.be.a("string").and.not.empty;
       });
 
-      pm.test("Deleted id matches requested id", function () {
-          const json = pm.response.json();
-          const createdId = pm.collectionVariables.get("createdBookId");
-          pm.expect(String(json.id)).to.eql(String(createdId));
-      });
-
-      // Clean up the collection variable after the workflow completes
-      pm.collectionVariables.unset("createdBookId");
-      pm.execution.setNextRequest(null);
+      pm.execution.setNextRequest("Health Check");
